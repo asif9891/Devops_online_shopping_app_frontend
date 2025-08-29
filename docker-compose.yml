@@ -1,0 +1,16 @@
+# version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: dockerfile   # Capital 'D' (conventionally)
+    image: code-frontend:0.0
+    container_name: code-frontend
+    ports:
+      - "5173:5173"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

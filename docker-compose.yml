@@ -5,8 +5,8 @@ services:
     build:
       context: .
       dockerfile: dockerfile   # Capital 'D' (conventionally)
-    image: code-frontend:0.0
-    container_name: code-frontend
+    image: code-frontend:${TAG}
+    container_name: code-frontend:0.0
     ports:
       - "5173:5173"
     healthcheck:

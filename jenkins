@@ -1,0 +1,53 @@
+@Library('shared') _
+pipeline{
+    agent any
+    
+    environment{ SONAR_HOME = tool "Sonar"}
+    
+    parameters{
+        string(name:'Frontend_version', defaultValue:'', description:'')
+    }
+    
+    stages{
+        stage('validate parameter'){
+            steps{
+                script{
+                    if( params.Frontend_version == "")
+                    {
+                        error("Version is required")
+                    }
+                }
+            }
+        }
+        stage('Clean Workspace'){
+            steps{
+                cleanWs()
+            }
+        }
+        stage('code checkout'){
+            steps{
+                code_checkout('https://github.com/asif9891/Devops_online_shopping_app_frontend.git','main')
+            }
+        }
+        stage('scan the directory'){
+            steps{
+                trivy_scan()
+            }
+        }
+        stage('OWASP Download'){
+            steps{
+                owasp_dependency()
+            }
+        }
+        stage('sonarqube'){
+            steps{
+                sonarqube_analysis("Sonar","node-frontend","node-frontend")
+            }
+        }
+        stage('sonarqube gate analysis'){
+            steps{
+                 sonarqube_code_quality()
+            }
+        }
+    }
+}
